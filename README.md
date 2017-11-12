@@ -5,11 +5,11 @@ This tutorial will walk you through deploying a three (3) node [Consul](https://
 ## Overview
 
 * Three (3) node Consul cluster using a [StatefulSet](http://kubernetes.io/docs/concepts/abstractions/controllers/statefulsets)
-* Secure communication between Consul members using [TLS and encryption keys](https://www.consul.io/docs/agent/encryption.html)
+* Secure communication between Consul members using [encryption keys](https://www.consul.io/docs/agent/encryption.html)
 
 ## Prerequisites
 
-This tutorial leverages features available in Kubernetes 1.6.0 and later.
+This tutorial leverages features available in Kubernetes 1.8.0 and later.
 
 * [kubernetes](http://kubernetes.io/docs/getting-started-guides/binary_release) 1.8.x
 
@@ -140,10 +140,22 @@ Run the `consul members` command to view the status of each cluster member.
 consul members
 ```
 ```
-Node      Address           Status  Type    Build  Protocol  DC
-consul-0  10.176.4.30:8301  alive   server  0.7.2  2         dc1
-consul-1  10.176.4.31:8301  alive   server  0.7.2  2         dc1
-consul-2  10.176.1.16:8301  alive   server  0.7.2  2         dc1
+Node      Address          Status  Type    Build  Protocol  DC   Segment
+consul-0  10.244.3.5:8301  alive   server  1.0.0  2         dc1  <all>
+consul-1  10.244.0.7:8301  alive   server  1.0.0  2         dc1  <all>
+consul-2  10.244.5.4:8301  alive   server  1.0.0  2         dc1  <all>
+```
+
+Run the `consul operator raft list-peers` command to view the election status.
+
+```
+consul operator raft list-peers
+```
+```
+Node      ID                                    Address          State     Voter  RaftProtocol
+consul-1  1f71afcb-e45b-a29f-b4be-75677b6f1657  10.244.0.7:8300  leader    true   3
+consul-2  c1042999-8bba-167a-4ed5-f33d5b37b953  10.244.5.4:8300  follower  true   3
+consul-0  c0b1ae3b-520e-9d11-3550-a9c84a93ac53  10.244.3.5:8300  follower  true   3
 ```
 
 ### Accessing the Web UI
